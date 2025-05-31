@@ -1,20 +1,29 @@
+/*
+ * ALU de 8 bits con operaciones automáticas cada 1 segundo
+ * Proyecto para TinyTapeout v10
+ * Autor: Job Anleu
+ */
+
+`default_nettype none
+
 module tt_um_job (
-    input  wire [7:0]  uio_in,     // A[7:0]
-    input  wire [7:0]  uio_oe,    // B[7:0]
-    output wire [7:0]  uo_out,   // no usado
-    output wire [7:0]  uio_out,    // resultado ALU
-    input  wire       ena,    // <--- ESTE ES EL QUE TE FALTA
-    input  wire        clk,
-    input  wire        rst_n
+    input  wire [7:0]  ui_in,     // A[7:0]
+    output wire [7:0]  uo_out,    // Resultado ALU
+    input  wire [7:0]  uio_in,    // B[7:0]
+    output wire [7:0]  uio_out,   // no usado
+    output wire [7:0]  uio_oe,    // no usado
+    input  wire        ena,       // enable (siempre activo)
+    input  wire        clk,       // reloj 100 MHz
+    input  wire        rst_n      // reset_n - activo en bajo
 );
 
     wire [7:0] A = ui_in;
-    wire [7:0] B = uio_oe;
+    wire [7:0] B = uio_in;
 
-    logic [2:0] op;            // selector de operación interno
-    logic [26:0] counter = 0;  // 27 bits → hasta 134M
+    logic [2:0] op;               // selector de operación
+    logic [26:0] counter = 0;     // para delay de 1 segundo
 
-    // ─── Contador de 1 segundo ────────────────────────────────
+    // ─── Contador de 1 segundo ─────────────────────────────
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             counter <= 0;
@@ -22,14 +31,14 @@ module tt_um_job (
         end else begin
             if (counter == 27'd99_999_999) begin
                 counter <= 0;
-                op <= (op == 3'd5) ? 3'd0 : op + 3'd1;  // ciclo 0→5
+                op <= (op == 3'd5) ? 3'd0 : op + 3'd1;  // 0→5
             end else begin
                 counter <= counter + 1;
             end
         end
     end
 
-    // ─── ALU ───────────────────────────────────────────────────
+    // ─── Módulos de la ALU ─────────────────────────────────
     wire [7:0] R_sum, R_sub, R_and, R_or, R_shl, R_shr;
     logic [7:0] R;
 
@@ -52,8 +61,12 @@ module tt_um_job (
         endcase
     end
 
-    assign uo_out = R;
-    assign uio_out = 8'b0;
+    // ─── Salidas requeridas ────────────────────────────────
+    assign uo_out  = R;       // Resultado visible en salidas dedicadas
+    assign uio_out = 8'b0;    // No se usan pines bidireccionales como salida
+    assign uio_oe  = 8'b0;    // No se habilita salida en pines bidireccionales
+
+    // Prevenir advertencias por señales no usadas directamente
+    wire _unused = &{ena};
 
 endmodule
-
