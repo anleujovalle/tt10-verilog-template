@@ -9,6 +9,7 @@ module tt_um_job (
     input  logic [15:0] sw,           // switches
     input  logic [4:0]  btn,          // {D,R,L,U,C} = [4:0]
     output logic [15:0] led,          // leds = switches
+    input  wire       ena,       // <--- ESTE ES EL QUE TE FALTA
     output logic [6:0]  seg,          // segmentos (activo bajo)
     output logic [3:0]  an,           // dígitos   (activo bajo)
     output logic        dp            // punto decimal
