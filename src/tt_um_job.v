@@ -1,6 +1,6 @@
 module tt_um_job (
     input  wire [7:0]  ui_in,     // A[7:0]
-    input  wire [7:0]  uio_in,    // B[7:0]
+    input  wire [7:0]  uio_oe,    // B[7:0]
     output wire [7:0]  uio_out,   // no usado
     output wire [7:0]  uo_out,    // resultado ALU
     input  wire       ena,    // <--- ESTE ES EL QUE TE FALTA
@@ -9,7 +9,7 @@ module tt_um_job (
 );
 
     wire [7:0] A = ui_in;
-    wire [7:0] B = uio_in;
+    wire [7:0] B = uio_oe;
 
     logic [2:0] op;            // selector de operación interno
     logic [26:0] counter = 0;  // 27 bits → hasta 134M
