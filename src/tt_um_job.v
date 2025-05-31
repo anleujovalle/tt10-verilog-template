@@ -1,8 +1,8 @@
 module tt_um_job (
-    input  wire [7:0]  ui_in,     // A[7:0]
+    input  wire [7:0]  uio_in,     // A[7:0]
     input  wire [7:0]  uio_oe,    // B[7:0]
-    output wire [7:0]  uio_out,   // no usado
-    output wire [7:0]  uo_out,    // resultado ALU
+    output wire [7:0]  uo_out,   // no usado
+    output wire [7:0]  uio_out,    // resultado ALU
     input  wire       ena,    // <--- ESTE ES EL QUE TE FALTA
     input  wire        clk,
     input  wire        rst_n
