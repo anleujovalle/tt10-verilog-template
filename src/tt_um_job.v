@@ -43,11 +43,11 @@ module tt_um_job (
     logic [7:0] R;
 
     suma       u_sum (.A(A), .B(B), .R(R_sum));
-    resta      u_sub (.A(A), .B(B), .R(R_sub));
-    and_alu    u_and (.A(A), .B(B), .R(R_and));
-    or_alu     u_or  (.A(A), .B(B), .R(R_or));
-    shiftleft  u_shl (.A(A),         .R(R_shl));
-    shiftright u_shr (.A(A),         .R(R_shr));
+    RESTA      u_sub (.A(A), .B(B), .R(R_sub));
+    AND_ALU    u_and (.A(A), .B(B), .R(R_and));
+    OR_ALU     u_or  (.A(A), .B(B), .R(R_or));
+    SHIFTLEFT  u_shl (.A(A),         .R(R_shl));
+    SHIFTRIGHT u_shr (.A(A),         .R(R_shr));
 
     always_comb begin
         case (op)
