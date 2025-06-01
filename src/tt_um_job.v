@@ -20,11 +20,11 @@ module tt_um_job (
     wire [7:0] A = ui_in;
     wire [7:0] B = uio_in;
 
-    logic [2:0] op;               // selector de operación
-    logic [26:0] counter = 0;     // para delay de 1 segundo
+    reg [2:0] op;               // selector de operación
+    reg [26:0] counter = 0;     // para delay de 1 segundo
 
     // ─── Contador de 1 segundo ─────────────────────────────
-    always_ff @(posedge clk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             counter <= 0;
             op <= 3'b000;
@@ -40,7 +40,7 @@ module tt_um_job (
 
     // ─── Módulos de la ALU ─────────────────────────────────
     wire [7:0] R_sum, R_sub, R_and, R_or, R_shl, R_shr;
-    logic [7:0] R;
+    reg  [7:0] R;
 
     suma       u_sum (.A(A), .B(B), .R(R_sum));
     RESTA      u_sub (.A(A), .B(B), .R(R_sub));
@@ -49,7 +49,7 @@ module tt_um_job (
     SHIFTLEFT  u_shl (.A(A),         .R(R_shl));
     SHIFTRIGHT u_shr (.A(A),         .R(R_shr));
 
-    always_comb begin
+    always @(*) begin
         case (op)
             3'b000: R = R_sum;
             3'b001: R = R_sub;
@@ -61,12 +61,11 @@ module tt_um_job (
         endcase
     end
 
-    // ─── Salidas requeridas ────────────────────────────────
     assign uo_out  = R;       // Resultado visible en salidas dedicadas
     assign uio_out = 8'b0;    // No se usan pines bidireccionales como salida
     assign uio_oe  = 8'b0;    // No se habilita salida en pines bidireccionales
 
-    // Prevenir advertencias por señales no usadas directamente
     wire _unused = &{ena};
 
 endmodule
+
